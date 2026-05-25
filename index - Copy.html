@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise AI — Train Smarter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">EXERCISE<em>AI</em></span>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-tab="explore">Explore</button>
+      <button class="nav-btn" data-tab="tracker">Calories</button>
+      <button class="nav-btn" data-tab="log">My Log</button>
+    </nav>
+    <div class="header-stat">
+      <span class="stat-label">TODAY</span>
+      <span class="stat-value" id="header-calories">0 kcal</span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">BUILD YOUR<br/><span class="hero-accent">BODY.</span></h1>
+      <p class="hero-sub">Discover exercises by muscle group. Track every calorie burned.</p>
+    </div>
+    <div class="hero-graphic">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring delay-1"></div>
+      <div class="hero-icon">🏋️</div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- ===== EXPLORE TAB ===== -->
+    <section class="tab-panel active" id="tab-explore">
+
+      <!-- Muscle Filter -->
+      <div class="section-header">
+        <h2 class="section-title">Target a Muscle</h2>
+        <p class="section-sub">Select a muscle group to see exercises</p>
+      </div>
+
+      <div class="muscle-grid">
+        <button class="muscle-btn active" data-muscle="all">
+          <span class="muscle-emoji">💪</span>
+          <span>All</span>
+        </button>
+        <button class="muscle-btn" data-muscle="chest">
+          <span class="muscle-emoji">🫁</span>
+          <span>Chest</span>
+        </button>
+        <button class="muscle-btn" data-muscle="back">
+          <span class="muscle-emoji">🔙</span>
+          <span>Back</span>
+        </button>
+        <button class="muscle-btn" data-muscle="shoulders">
+          <span class="muscle-emoji">🔱</span>
+          <span>Shoulders</span>
+        </button>
+        <button class="muscle-btn" data-muscle="arms">
+          <span class="muscle-emoji">🦾</span>
+          <span>Arms</span>
+        </button>
+        <button class="muscle-btn" data-muscle="core">
+          <span class="muscle-emoji">⚙️</span>
+          <span>Core</span>
+        </button>
+        <button class="muscle-btn" data-muscle="legs">
+          <span class="muscle-emoji">🦵</span>
+          <span>Legs</span>
+        </button>
+        <button class="muscle-btn" data-muscle="glutes">
+          <span class="muscle-emoji">🍑</span>
+          <span>Glutes</span>
+        </button>
+        <button class="muscle-btn" data-muscle="cardio">
+          <span class="muscle-emoji">❤️</span>
+          <span>Cardio</span>
+        </button>
+      </div>
+
+      <!-- AI Ask Bar -->
+      <div class="ai-bar">
+        <input class="ai-input" id="ai-input" type="text" placeholder='Ask AI... e.g. "best exercise for lower back pain"' />
+        <button class="ai-btn" id="ai-ask-btn">
+          <span>Ask AI</span>
+          <span class="ai-spinner hidden" id="ai-spinner">⏳</span>
+        </button>
+      </div>
+      <div class="ai-response hidden" id="ai-response"></div>
+
+      <!-- Exercise Cards -->
+      <div class="exercises-header">
+        <span class="exercises-count" id="exercises-count">Showing all exercises</span>
+        <select class="sort-select" id="sort-select">
+          <option value="name">Sort: A–Z</option>
+          <option value="calories">Sort: Calories</option>
+          <option value="difficulty">Sort: Difficulty</option>
+        </select>
+      </div>
+
+      <div class="exercise-grid" id="exercise-grid"></div>
+    </section>
+
+    <!-- ===== CALORIES TAB ===== -->
+    <section class="tab-panel" id="tab-tracker">
+      <div class="section-header">
+        <h2 class="section-title">Calorie Tracker</h2>
+        <p class="section-sub">Log your workouts and watch calories burn</p>
+      </div>
+
+      <div class="tracker-layout">
+        <!-- Ring + Stats -->
+        <div class="ring-card">
+          <div class="ring-wrapper">
+            <svg class="ring-svg" viewBox="0 0 200 200">
+              <circle class="ring-bg" cx="100" cy="100" r="80"/>
+              <circle class="ring-fill" id="ring-fill" cx="100" cy="100" r="80"
+                stroke-dasharray="502"
+                stroke-dashoffset="502"/>
+            </svg>
+            <div class="ring-center">
+              <span class="ring-burned" id="ring-burned">0</span>
+              <span class="ring-unit">kcal burned</span>
+            </div>
+          </div>
+          <div class="ring-goal-row">
+            <label class="goal-label">Daily Goal:</label>
+            <input class="goal-input" id="goal-input" type="number" value="500" min="100" max="5000" />
+            <span class="goal-unit">kcal</span>
+          </div>
+          <div class="goal-progress-text" id="goal-progress-text">0% of daily goal</div>
+        </div>
+
+        <!-- Quick Log -->
+        <div class="quick-log-card">
+          <h3 class="card-title">Quick Log</h3>
+          <div class="quick-log-form">
+            <select class="form-select" id="log-exercise-select">
+              <option value="">Select exercise...</option>
+            </select>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Duration (min)</label>
+                <input class="form-input" id="log-duration" type="number" value="30" min="1" max="300" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Weight (lbs)</label>
+                <input class="form-input" id="log-weight" type="number" value="150" min="50" max="500" />
+              </div>
+            </div>
+            <div class="calories-preview" id="calories-preview">
+              ≈ <strong>0</strong> kcal
+            </div>
+            <button class="log-btn" id="log-btn">+ Log Workout</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's Sessions -->
+      <div class="sessions-card">
+        <div class="sessions-header">
+          <h3 class="card-title">Today's Sessions</h3>
+          <button class="clear-btn" id="clear-today-btn">Clear All</button>
+        </div>
+        <div class="sessions-list" id="sessions-list">
+          <div class="empty-state">No workouts logged yet today.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LOG TAB ===== -->
+    <section class="tab-panel" id="tab-log">
+      <div class="section-header">
+        <h2 class="section-title">My Log</h2>
+        <p class="section-sub">Your complete workout history</p>
+      </div>
+
+      <div class="log-stats-row">
+        <div class="log-stat-card">
+          <div class="log-stat-value" id="total-sessions">0</div>
+          <div class="log-stat-label">Total Sessions</div>
+        </div>
+        <div class="log-stat-card">
+          <div class="log-stat-value" id="total-calories">0</div>
+          <div class="log-stat-label">Total Calories</div>
+        </div>
+        <div class="log-stat-card">
+          <div class="log-stat-value" id="total-minutes">0</div>
+          <div class="log-stat-label">Total Minutes</div>
+        </div>
+        <div class="log-stat-card">
+          <div class="log-stat-value" id="fav-exercise">—</div>
+          <div class="log-stat-label">Top Exercise</div>
+        </div>
+      </div>
+
+      <div class="history-list" id="history-list">
+        <div class="empty-state">No workout history yet. Start logging!</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- EXERCISE DETAIL MODAL -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
